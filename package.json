@@ -1,0 +1,23 @@
+{
+  "name": "claude-boot-budget",
+  "version": "0.1.0",
+  "description": "Fail-closed auditor for the boot token budget of Claude Code session profiles.",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/budget.js",
+  "bin": {
+    "claude-boot-budget": "bin/claude-boot-budget.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test src/*.test.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "profiles",
+    "LICENSE"
+  ]
+}

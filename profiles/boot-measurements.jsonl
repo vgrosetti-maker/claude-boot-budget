@@ -1,0 +1,2 @@
+{"profile":"base","extras":[],"sha256":"3693aea3ccfa3773d261d2b26185ce59850b1b6f2996db937baac7409d318d7a","total_tokens":12000,"measured_at":"2026-01-01"}
+{"profile":"light","extras":[],"sha256":"3693aea3ccfa3773d261d2b26185ce59850b1b6f2996db937baac7409d318d7a","total_tokens":21500,"global_load":9500,"global_load_source":"ablation pair boot-20260101-090000 x boot-20260101-090500","measured_at":"2026-01-01"}

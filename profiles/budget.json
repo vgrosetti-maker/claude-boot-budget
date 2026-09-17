@@ -1,0 +1,44 @@
+{
+  "_doc": "Boot token budget per session profile. Single source for two things the auditor checks: (1) why each enabled plugin is enabled — a plugin with no line here fails the gate, and a line with no matching plugin fails too; (2) the token caps for boot input — THREE of them, see _lines below. A profile that bloats past its cap fails the gate. The 'measured' numbers do not live here: they live in boot-measurements.jsonl, tagged with the sha256 of the profile that was measured, so editing a profile invalidates its measurement instead of inheriting a number that no longer applies.",
+  "_recipe": "input_tokens + cache_creation_input_tokens + cache_read_input_tokens",
+  "_measurements": "profiles/boot-measurements.jsonl",
+  "_caps": "RULE (reproducible, not 'the number from that one day'): cap = highest valid measurement for the profile x 1.08, rounded up to the next hundred. A valid measurement shares the profile's current sha256 AND was taken with a warm plugin cache. A cap is a guardrail, not a target: enable a new plugin, remeasure, and either drop a plugin or recalibrate the cap with the new measurement if it goes over. Each profile declares in 'calibrated_cap' the measurement that produced its cap ({at, measurement, global_load: number or null}). 'cap' derives from (measurement - global_load) and 'total_cap' from measurement. A valid measurement that starts splitting out the global load invalidates the old cap until it's recalibrated; a cap above what the rule derives from its own calibration is unbacked slack and fails; a cap below it passes, because a cap may only get stricter. A valid measurement that differs from the one that calibrated the cap becomes a WARNING with the number the rule would derive today.",
+  "_lines": "The boot budget has THREE lines, not one. (1) profile cap = plugins only, the account that shrinks when you disable a plugin; (2) global-load cap = auto-loaded memory files + loose top-level commands, which enter every profile and are invisible to a per-profile measurement tool — a pruning lever, not an on/off lever; (3) total_cap = the whole context window, because it is one window and does not care where a token came from: the two partial caps can both stay green while the session as a whole gets worse. A measurement that does not declare global_load is treated as the combined total (the profile cap keeps charging the sum) — never assume a discount nobody measured.",
+  "global_load": {
+    "_doc": "Cap for the global load (line 2). Measured once with an ablation pair over auto-loaded memory and loose top-level commands, then capped by the house rule (measurement x 1.08, next hundred up). Once measured, this line starts failing (item 6 of the auditor) and 'cap: null' stops being a legitimate state.",
+    "cap": 10300,
+    "measured": {
+      "total (memory + commands)": "9,500 tokens, ablation pair boot-20260101-090000 (baseline) x boot-20260101-090500 (memory + commands emptied out), example profile 'light'. This is the number the 10,300 cap derives from."
+    }
+  },
+  "profiles": {
+    "base": {
+      "usage": "Floor of every profile: only what needs to exist before the request itself is known. Opens normally, and is the target for measuring the floor in isolation.",
+      "cap": 13000,
+      "total_cap": 13000,
+      "calibrated_cap": {
+        "at": "2026-01-01",
+        "measurement": 12000,
+        "global_load": null,
+        "_note": "Not split: this measurement charges the combined total, so cap and total_cap are both rule(12000) = 13,000."
+      },
+      "plugins": {
+        "core-agent@example-org": "Entry point for the session; needs to exist before the request is known, so it cannot load as a consequence of the task."
+      }
+    },
+    "light": {
+      "usage": "Default profile for opening a session: a question, a read, a single-domain task. Deliberately identical to 'base' — if it hurts, the missing profile gets opened with a ticket, not with one more plugin added here.",
+      "cap": 13000,
+      "total_cap": 23300,
+      "calibrated_cap": {
+        "at": "2026-01-01",
+        "measurement": 21500,
+        "global_load": 9500,
+        "_note": "Split: cap = rule(21500 - 9500) = rule(12000) = 13,000. total_cap = rule(21500) = 23,300."
+      },
+      "plugins": {
+        "core-agent@example-org": "Same reason as base: without it, the session can't size its own request."
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "enabledPlugins": {
+    "code-review@example-plugins": false,
+    "browser-tools@example-plugins": false,
+    "design-system@example-plugins": false,
+    "seo-toolkit@example-plugins": false,
+    "docs-writer@example-plugins": false,
+    "core-agent@example-org": true
+  }
+}
