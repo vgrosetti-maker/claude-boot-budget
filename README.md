@@ -1,5 +1,7 @@
 # claude-boot-budget
 
+[![check](https://github.com/vgrosetti-maker/claude-boot-budget/actions/workflows/check.yml/badge.svg)](https://github.com/vgrosetti-maker/claude-boot-budget/actions/workflows/check.yml)
+
 A fail-closed auditor and an ablation-based measurement tool for the boot token cost of Claude Code
 session profiles. Node >= 20, zero external dependencies, MIT.
 
@@ -70,7 +72,7 @@ not split the global load.
 ## Install
 
 ```
-git clone <this repo>
+git clone https://github.com/vgrosetti-maker/claude-boot-budget.git
 cd claude-boot-budget
 ```
 

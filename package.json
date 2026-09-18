@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "Fail-closed auditor for the boot token budget of Claude Code session profiles.",
   "license": "MIT",
+  "author": "Vitor Grosetti",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vgrosetti-maker/claude-boot-budget.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vgrosetti-maker/claude-boot-budget/issues"
+  },
+  "homepage": "https://github.com/vgrosetti-maker/claude-boot-budget#readme",
   "type": "module",
   "main": "src/budget.js",
   "bin": {
